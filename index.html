@@ -1,5 +1,9 @@
 <html>
-	<body>
-		meow
-		</body>
-		</html>
+<body>
+<p id="meow">
+</p>
+
+<script>
+const q=window.location.search.replace("?","").split()
+console.log(q);document.getElementById("meow").innerHTML =q
+</script></body></html>
