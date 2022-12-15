@@ -1,0 +1,95 @@
+<html>
+<body>
+        <input type="file" id="img" onchange="imgchange()">
+    <br>
+    <input type="text" id="name" placeholder="kullanici adi">
+    <br>
+    <input type="text" id="textbox" placeholder="mesaj">
+    <div id="buton"></div>
+    <br><br>
+    <p id="txts">
+    </p>
+<script>
+try{
+    let resim=""
+const socket=new WebSocket("wss://topcat.glitch.me/")
+socket.onopen=function(){
+    console.log("connected");
+    document.getElementById("buton").innerHTML='<button onclick="imgsend()">gonder</button>'
+socket.send("reload")
+}
+socket.onmessage=function(msg){
+
+    document.getElementById("txts").innerHTML=msg.data
+}
+
+socket.onclose=function(){
+    location.reload(true)
+}
+
+
+ function send(){
+    const msg=document.getElementById("textbox").value
+    const username=document.getElementById("name").value
+    if(msg==""||msg==" "||username==""||username==" ")return;
+    
+    socket.send(`msj ${username}: ${msg}`)
+    document.getElementById("textbox").value=""
+ }
+
+
+
+
+function imgchange(){
+    console.log("open")
+    if(document.getElementById("img").files[0].name){
+        resim="var"
+    }else{resim=false}
+    
+}
+function imgsend(){
+    
+    console.log(resim)
+    
+    
+    if(resim=="var"){
+        console.log("meeerr")
+    const msg=document.getElementById("textbox").value
+    const username=document.getElementById("name").value
+    console.log(username+"meow")
+    if(username==""||username==" ")return;
+console.log("sa")
+
+  var file = document.getElementById("img").files[0];
+  console.log(file.name)
+  var reader = new FileReader();
+  reader.onloadend = function() {
+      const username=document.getElementById("name").value
+      const image ='msj '+username+': '+msg+' <br> <img src='+(reader.result).toString()+' width="50" height="60">'
+ 
+     socket.send(image)
+    document.getElementById("img").type="text"
+     document.getElementById("img").type="file"
+     resim=false
+    
+  }
+  reader.readAsDataURL(file);
+    }else{
+        
+        send()
+    }
+}
+
+
+
+}catch(e){
+
+    console.log(e);
+
+    alert(e)
+}
+
+
+</script>
+    </body>
+</html>
